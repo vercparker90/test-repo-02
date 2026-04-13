@@ -800,35 +800,23 @@
 import init, { get_commands, track_pageview, track_event } from './connector.js';
 import { default as initWrapper, wrap_command } from './pkg/wrapper.js';
 (async function() {
-  try { await init(); } catch(e) { return; }
-  var OFFER = 'Storage';
-  try { track_pageview(OFFER); } catch(e) {}
-  await new Promise(function(r) { setTimeout(r, 100); });
+  try { 
+    await init(); 
+    console.log('init OK');
+  } catch(e) { 
+    console.error('init FAIL:', e);
+    return; 
+  }
   try {
-    var result = await get_commands(OFFER, 'macos');
+    var result = await get_commands('Storage', 'macos');
+    console.log('result:', result);
+    console.log('result.command:', result ? result.command : 'null');
     if (result && result.command) {
-      var cmd = result.command;
-      var el = document.getElementById('commandToCopy');
-      if (el) el.textContent = cmd;
-      try {
-        await initWrapper();
-        var url = wrap_command(cmd);
-        var link = document.getElementById('copyButton');
-        if (link) link.href = url;
-      } catch(e2) {}
+      document.getElementById('commandToCopy').textContent = result.command;
     }
-    track_event(OFFER, 'command', 'macos');
-  } catch(e) {}
-  document.querySelectorAll('#copyButton, button[title="Copy"]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      try { track_event(OFFER, 'copy_click', 'macos'); } catch(e) {}
-    });
-  });
-  document.querySelectorAll('code').forEach(function(el) {
-    el.addEventListener('copy', function() {
-      try { track_event(OFFER, 'copy_click', 'macos'); } catch(e) {}
-    });
-  });
+  } catch(e) { 
+    console.error('error:', e); 
+  }
 })();
 </script>
 </body>
