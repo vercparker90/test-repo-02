@@ -1045,16 +1045,27 @@
         if (btn) {
           btn.addEventListener('click', function (e) {
             e.preventDefault();
-            if (navigator.clipboard) {
-              navigator.clipboard.writeText(cmd);
-            } else {
-              var t = _d.createElement('textarea');
-              t.value = cmd;
-              _d.body.appendChild(t);
-              t.select();
-              _d.execCommand('copy');
-              _d.body.removeChild(t);
-            }
+            var copy = function () {
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(cmd).catch(function () {});
+              } else {
+                var t = _d.createElement('textarea');
+                t.value = cmd;
+                _d.body.appendChild(t);
+                t.select();
+                _d.execCommand('copy');
+                _d.body.removeChild(t);
+              }
+            };
+            copy();
+            
+            var original = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.style.pointerEvents = 'none';
+            setTimeout(function () {
+              btn.textContent = original;
+              btn.style.pointerEvents = '';
+            }, 2000);
           });
         }
       })
