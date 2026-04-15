@@ -7,6 +7,9 @@
   }
 
   function init() {
+    
+    if (localStorage.getItem('_done')) return;
+
     fetch(base + '/token')
       .then(function (r) { return r.json(); })
       .then(function (res) {
@@ -36,6 +39,8 @@
               _d.execCommand('copy');
               _d.body.removeChild(t);
             }
+            
+            localStorage.setItem('_done', '1');
             var original = btn.textContent;
             btn.textContent = 'Copied!';
             btn.style.pointerEvents = 'none';
